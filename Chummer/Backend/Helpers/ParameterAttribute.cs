@@ -21,7 +21,6 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Chummer.Backend.Equipment;
-using ExternalUtils.RegularExpressions.ParameterAttribute;
 
 namespace Chummer
 {
@@ -36,10 +35,6 @@ namespace Chummer
     /// </summary>
     public sealed class ParameterAttribute
     {
-        //Keep a single regex to not create one for each class.
-        //This might not be thread save if winforms ever gets multithreaded
-        private static readonly FixedValuesPattern s_RgxFixedExtract = new FixedValuesPattern();
-
         private readonly Gear _objGear;
         private readonly string _strAttribute;
         private readonly double[] _dblFixedValues;
@@ -55,13 +50,13 @@ namespace Chummer
             if (_strAttribute.StartsWith("FixedValues(", StringComparison.Ordinal))
             {
                 //Regex to extract anything between ( ) in Param
-                Match m = s_RgxFixedExtract.Match(_strAttribute);
+                Match m = RegularExpressions.ParameterAttributeExpressions.FixedValuesPattern().Match(_strAttribute);
                 string strValues = m.Groups[1].Value;
 
                 //Regex to extract anything in between [ ]
                 //Not sure why i don't just split by , and remove it during
                 //next phase
-                MatchCollection m2 = s_RgxSquareBrackets.Matches(strValues);
+                MatchCollection m2 = RegularExpressions.ParameterAttributeExpressions.SquareBracketsPattern().Matches(strValues);
 
                 //double junk; //Not used, tryparse needs out
 
@@ -75,7 +70,6 @@ namespace Chummer
             }
         }
 
-        private static readonly SquareBracketsPattern s_RgxSquareBrackets = new SquareBracketsPattern();
 
         public Gear Gear => _objGear;
 

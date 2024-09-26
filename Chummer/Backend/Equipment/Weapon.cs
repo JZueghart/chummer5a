@@ -35,7 +35,6 @@ using System.Xml;
 using System.Xml.XPath;
 using Chummer.Backend.Attributes;
 using Chummer.Backend.Skills;
-using ExternalUtils.RegularExpressions.Weapons;
 using Microsoft.VisualStudio.Threading;
 using NLog;
 using IAsyncDisposable = System.IAsyncDisposable;
@@ -2230,13 +2229,13 @@ namespace Chummer.Backend.Equipment
         {
             // Assuming base text of 10(ml)x2
             // matches [2x]10(ml) or [10x]2(ml)
-            foreach (Match m in s_RgxAmmoCapacityFirst.Matches(strAmmo))
+            foreach (Match m in RegularExpressions.Weapons.AmmoCapacityFirstPattern().Matches(strAmmo))
             {
                 strAmmo = strAmmo.TrimStartOnce(m.Value);
             }
 
             // Matches 2(ml[)x10] (But does not capture the ')') or 10(ml)[x2]
-            foreach (Match m in s_RgxAmmoCapacitySecond.Matches(strAmmo))
+            foreach (Match m in RegularExpressions.Weapons.AmmoCapacitySecondPattern().Matches(strAmmo))
             {
                 strAmmo = strAmmo.TrimEndOnce(m.Value);
             }
@@ -2246,9 +2245,6 @@ namespace Chummer.Backend.Equipment
                 strAmmo = strAmmo.Substring(0, intPos);
             return strAmmo;
         }
-
-        private static readonly AmmoCapacityFirstPattern s_RgxAmmoCapacityFirst = new AmmoCapacityFirstPattern();
-        private static readonly AmmoCapacitySecondPattern s_RgxAmmoCapacitySecond = new AmmoCapacitySecondPattern();
 
         /// <summary>
         /// The type of Ammunition loaded in the Weapon.

@@ -30,7 +30,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
-using ExternalUtils.RegularExpressions;
 
 namespace Chummer
 {
@@ -1444,7 +1443,6 @@ namespace Chummer
                     }
                 };
 
-        private static readonly ExtraFileSpecifierPattern s_RgxExtraFileSpecifierExpression = new ExtraFileSpecifierPattern();
 
         public static string MAGAdeptString(string strLanguage = "", bool blnLong = false,
                                             CancellationToken token = default)
@@ -1697,7 +1695,7 @@ namespace Chummer
 
                     default:
                         strReturn = strExtra;
-                        Match objFileSpecifier = s_RgxExtraFileSpecifierExpression.Match(strReturn);
+                        Match objFileSpecifier = RegularExpressions.General.ExtraFileSpecifierPattern().Match(strReturn);
                         if (objFileSpecifier.Success)
                         {
                             strReturn = strReturn.TrimStartOnce(objFileSpecifier.Value).Trim();
@@ -2164,7 +2162,7 @@ namespace Chummer
                 return "None";
             // If no original could be found, just use whatever we were passed.
             string strReturn = strExtra;
-            Match objFileSpecifier = s_RgxExtraFileSpecifierExpression.Match(strReturn);
+            Match objFileSpecifier = RegularExpressions.General.ExtraFileSpecifierPattern().Match(strReturn);
             if (objFileSpecifier.Success)
             {
                 strReturn = strReturn.TrimStartOnce(objFileSpecifier.Value).Trim();

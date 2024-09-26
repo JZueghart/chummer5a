@@ -24,7 +24,6 @@ using System.Reflection;
 using System.Resources;
 using System.Text.RegularExpressions;
 using System.Threading;
-using ExternalUtils.RegularExpressions.TranslateExceptionTelemetryProcessor;
 using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
@@ -124,12 +123,12 @@ namespace Chummer
                 else if (!string.IsNullOrEmpty(translated))
                 {
                     string pattern = Regex.Escape(message);
-                    pattern = s_RgxFirstReplacePattern.Replace(pattern, "(?<group$1>.*)");
+                    pattern = RegularExpressions.TranslateExceptionTelemetryProcessor.FirstReplacePattern().Replace(pattern, "(?<group$1>.*)");
 
                     Regex regex = new Regex(pattern);
 
                     string replacePattern = translated;
-                    replacePattern = s_RgxSecondReplacePattern.Replace(replacePattern, "${group$1}");
+                    replacePattern = RegularExpressions.TranslateExceptionTelemetryProcessor.SecondReplacePattern().Replace(replacePattern, "${group$1}");
                     replacePattern = replacePattern.Replace("\\$", "$");
 
                     result = regex.Replace(result, replacePattern);
@@ -138,10 +137,5 @@ namespace Chummer
 
             return result;
         }
-
-        private static readonly FirstReplacePattern s_RgxFirstReplacePattern
-            = new FirstReplacePattern();
-        private static readonly SecondReplacePattern s_RgxSecondReplacePattern
-            = new SecondReplacePattern();
     }
 }

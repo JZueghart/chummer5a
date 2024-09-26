@@ -57,11 +57,6 @@
     <NoWarn>VSTHRD003;VSTHRD100;VSTHRD103;VSTHRD200</NoWarn>
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="RegexLib">
-      <HintPath>.\RegexLib.dll</HintPath>
-    </Reference>
-  </ItemGroup>
   <!--Components-->
   <ItemGroup>
 

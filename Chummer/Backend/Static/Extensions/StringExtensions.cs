@@ -29,7 +29,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ExternalUtils.RegularExpressions;
 using RtfPipe;
 
 namespace Chummer
@@ -1502,8 +1501,8 @@ namespace Chummer
             if (string.IsNullOrEmpty(strInput))
                 return strInput;
             return blnEscaped
-                ? s_RgxEscapedLineEndingsExpression.Replace(strInput, Environment.NewLine)
-                : s_RgxLineEndingsExpression.Replace(strInput, Environment.NewLine);
+                ? RegularExpressions.General.EscapedLineEndingsPattern().Replace(strInput, Environment.NewLine)
+                : RegularExpressions.General.LineEndingsPattern().Replace(strInput, Environment.NewLine);
         }
 
         /// <summary>
@@ -1553,7 +1552,7 @@ namespace Chummer
                                .Replace("&amp;amp;", "&amp;")
                                .Replace("<", "&lt;")
                                .Replace(">", "&gt;");
-            return s_RgxLineEndingsExpression.Replace(strReturn, "<br />");
+            return RegularExpressions.General.LineEndingsPattern().Replace(strReturn, "<br />");
         }
 
         private static readonly ReadOnlyCollection<char> s_achrPathInvalidPathChars
@@ -1732,7 +1731,7 @@ namespace Chummer
             if (strInputTrimmed.StartsWith("{/rtf1", StringComparison.Ordinal)
                 || strInputTrimmed.StartsWith(@"{\rtf1", StringComparison.Ordinal))
             {
-                return s_RtfStripperRegex.IsMatch(strInputTrimmed);
+                return RegularExpressions.General.RtfStripperPattern().IsMatch(strInputTrimmed);
             }
 
             return false;
@@ -1745,7 +1744,7 @@ namespace Chummer
         /// <returns>True if the string contains HTML tags, False otherwise.</returns>
         public static bool ContainsHtmlTags(this string strInput)
         {
-            return !string.IsNullOrEmpty(strInput) && s_RgxHtmlTagExpression.IsMatch(strInput);
+            return !string.IsNullOrEmpty(strInput) && RegularExpressions.General.HtmlTagsPattern().IsMatch(strInput);
         }
 
         /// <summary>
@@ -1757,14 +1756,9 @@ namespace Chummer
         {
             return string.IsNullOrEmpty(strInput)
                 ? string.Empty
-                : GlobalSettings.InvalidUnicodeCharsExpression.Replace(strInput, string.Empty);
+                : RegularExpressions.General.InvalidUnicodeCharsPattern().Replace(strInput, string.Empty);
+
         }
-
-        private static readonly HtmlTagsPattern s_RgxHtmlTagExpression = new HtmlTagsPattern();
-
-        private static readonly LineEndingsPattern s_RgxLineEndingsExpression = new LineEndingsPattern();
-
-        private static readonly EscapedLineEndingsPattern s_RgxEscapedLineEndingsExpression = new EscapedLineEndingsPattern();
 
         private static readonly DebuggableSemaphoreSlim s_RtbRtfManipulatorLock = new DebuggableSemaphoreSlim();
         private static readonly Lazy<RichTextBox> s_RtbRtfManipulator = new Lazy<RichTextBox>(() => Utils.RunOnMainThread(() => new RichTextBox()));
@@ -1785,7 +1779,7 @@ namespace Chummer
                 return string.Empty;
             }
 
-            Match objMatch = s_RtfStripperRegex.Match(inputRtf);
+            Match objMatch = RegularExpressions.General.RtfStripperPattern().Match(inputRtf);
 
             if (!objMatch.Success)
             {
@@ -1940,8 +1934,6 @@ namespace Chummer
                 Ignorable = ignorable;
             }
         }
-
-        private static readonly RtfStripperPattern s_RtfStripperRegex = new RtfStripperPattern();
 
         private static readonly IReadOnlyCollection<string> s_SetRtfDestinations = new HashSet<string>
         {

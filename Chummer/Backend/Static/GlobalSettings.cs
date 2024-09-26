@@ -30,7 +30,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
-using ExternalUtils.RegularExpressions;
 using iText.Kernel.Pdf;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Win32;
@@ -1492,12 +1491,6 @@ namespace Chummer
         /// XmlReaderSettings that should only be used if invalid characters are found.
         /// </summary>
         public static XmlReaderSettings UnSafeXmlReaderSettings { get; } = new XmlReaderSettings { XmlResolver = null, IgnoreComments = true, IgnoreWhitespace = true, CheckCharacters = false };
-
-        /// <summary>
-        /// Regex that indicates whether a given string is a match for text that cannot be saved in XML. Match == true.
-        /// </summary>
-        [CLSCompliant(false)]
-        public static InvalidUnicodeCharsPattern InvalidUnicodeCharsExpression { get; } = new InvalidUnicodeCharsPattern();
 
         /// <summary>
         /// Clipboard.
